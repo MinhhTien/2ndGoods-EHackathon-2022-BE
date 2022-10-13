@@ -1,10 +1,9 @@
 # Dependency directories
 node_modules/
-
+dist
 # dotenv environment variables file
 .env
-.env.test
  
-public/uploads
+public
 package-lock.json
 .idea
