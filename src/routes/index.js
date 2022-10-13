@@ -1,5 +1,7 @@
-const routes = require("express").Router();
+const routes = require('express').Router();
 
 routes.get('/test', (req, res) => {
-    res.status(200).send("Test")
+    res.status(200).send('Test')
 })
+
+module.exports = routes;

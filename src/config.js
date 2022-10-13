@@ -1,6 +1,7 @@
-require("dotenv").config()
+require('dotenv').config()
 
 exports.APPLICATION_PORT = process.env.APPLICATION_PORT || 3000
+exports.HOST_NAME = process.env.HOST_NAME || 'localhost'
 exports.DATABASE_NAME = process.env.DATABASE_NAME || 'test'
 exports.ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'root'
 exports.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || ''
