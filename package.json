@@ -1,7 +1,7 @@
 {
   "name": "ehackathon",
   "version": "1.0.0",
-  "description": "Web for purchase 2hands prodcucts",
+  "description": "Web Application for purchase 2hands products",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -9,6 +9,18 @@
     "init-database": "typeorm schema:sync -d ./dist/data.js",
     "dev": "nodemon"
   },
+  "repository": {
+     "type": "git",
+     "url": "https://github.com/MinhhTien/2ndGoods-EHackathon-2022-BE.git"
+  },
+  "keywords": [
+     "Backend",
+     "ORM",
+     "Typescript",
+     "NodeJS",
+     "MySQL",
+     "Database"
+  ],
   "author": "BE Team EHackathon",
   "license": "MIT",
   "dependencies": {

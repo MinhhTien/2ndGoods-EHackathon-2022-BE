@@ -1,6 +1,6 @@
 import { AdvancedConsoleLogger, DataSource } from 'typeorm';
 import * as path from 'path';
-import Config from './utils/globals.config';
+import Config from './utils/app.config';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
@@ -9,6 +9,7 @@ export const AppDataSource = new DataSource({
     username: Config.DATABASE_USERNAME,
     password: Config.DATABASE_PASSWORD,
     database: Config.DATABASE_NAME,
-    entities: [path.resolve(__dirname + '/entities/*.js')],
+    entities: [path.resolve(__dirname + '/entities/*{.js,.ts}')],
+    logging: true,
     logger: new AdvancedConsoleLogger('all'),
   });

@@ -1,5 +1,5 @@
 import express from 'express';
-import Config from './utils/globals.config';
+import Config from './utils/app.config';
 import { AppDataSource } from './data';
 import bodyParser from 'body-parser';
 const path = require('path');
