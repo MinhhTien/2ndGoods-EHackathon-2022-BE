@@ -3,11 +3,12 @@ import  product from './product';
 import account from './account';
 import auth from './auth';
 import category from './category';
+import path from "path"
 
 const routes = Router();
 
 routes.use('/get', async (req, res) => {
-    res.send('Hello World!');
+    res.sendFile(path.resolve("./resources/index.html"));
 });
 
 routes.use('/auth', auth);
