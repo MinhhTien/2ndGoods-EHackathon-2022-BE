@@ -157,6 +157,7 @@ export default class OrderService {
           (newOrder.totalPayment = totalPayment),
           (newOrder.status = status),
           await orderReposity.save(newOrder);
+
         return new Result(
           StatusCodes.CREATED,
           'Create new order successfully!',

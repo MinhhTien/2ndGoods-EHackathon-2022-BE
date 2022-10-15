@@ -1,6 +1,6 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Account from "./account";
-import { LocalFile } from "./localFile";
+import { Order } from "./order";
 
 @Entity()
 export class Notification {
@@ -13,8 +13,9 @@ export class Notification {
     @Column()
     content: string
 
-    @OneToOne(() => LocalFile, image => image.id)
-    image: LocalFile;
+    @OneToOne(() => Order, order => order.notification)
+    @JoinColumn()
+    order: Order;
 
     @Column()
     @CreateDateColumn()
