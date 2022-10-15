@@ -5,19 +5,33 @@ import {
     CreateDateColumn,
     JoinColumn,
     OneToOne,
+    ManyToMany,
+    OneToMany,
 } from 'typeorm';
 
 import bcrypt from 'bcryptjs';
 import { LocalFile } from './localFile';
 import { GenderEnum, StatusEnum } from '../utils/app.enum';
+import { Notification } from './notification';
+import { Message } from './message';
+import { Cart } from './cart';
+import { Voucher } from './voucher';
+import { OrderProduct } from './orderProduct';
+import { Report } from './report';
 
 @Entity()
 export default class Account {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100})
+    @Column({ length: 100 })
     name: string
+
+    @Column({nullable: true})
+    userName: string
+
+    @Column({nullable: true})
+    address: string
 
     @Column({ length: 100 })
     email: string;
@@ -62,4 +76,22 @@ export default class Account {
     checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
         return bcrypt.compareSync(unencryptedPassword, this.password);
     }
+
+    @ManyToMany(() => Notification, notification => notification.id)
+    notification: Notification[];
+
+    @ManyToMany(() => Voucher, voucher => voucher.id)
+    voucher: Voucher[];
+
+    @OneToMany(() => OrderProduct, orderProduct => orderProduct.id)
+    orderProduct: OrderProduct[];
+
+    @OneToMany(() => Report, report => report.id)
+    report: Report[]
+
+    @OneToMany(() => Message, message => message.id)
+    message: Message[];
+
+    @OneToOne(() => Cart, cart => cart.id)
+    cart: Cart;
 }

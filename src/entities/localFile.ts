@@ -14,5 +14,5 @@ import {
   
     @Column()
     path: string;
-  }
+   }
   
