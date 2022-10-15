@@ -16,7 +16,7 @@ export default class Account {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100, nullable: true })
+    @Column({ length: 100})
     name: string
 
     @Column({ length: 100 })

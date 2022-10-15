@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data";
 import Account from "../entities/account";
-import { StatusEnum } from "../utils/app.enum";
+import { GenderEnum, StatusEnum } from "../utils/app.enum";
 import { StatusCodes } from 'http-status-codes';
 import Result from '../utils/result';
 
@@ -105,6 +105,51 @@ export default class AccountService {
       StatusCodes.CREATED,
       'Create new user successfully!'
     );
+  }
+  static async edit(id: number, name: string, userName: string, phone: string
+    , email: string, address: string, date_of_birth: string, avatar: Express.Multer.File | null
+    , gender: GenderEnum | null) {
+    const account: Account | null = await accountRepository.findOne({
+      where: {
+        id: id,
+        status: StatusEnum.ACTIVE,
+      },
+    });
+    if (account == null) {
+      return new Result(StatusCodes.BAD_REQUEST, 'Account not exist.');
+    }
+
+    if (phone != null) {
+      const phoneAccount: Account | null = await accountRepository.findOne({
+        where: {
+          phone: phone,
+          status: StatusEnum.ACTIVE,
+        },
+      });
+      if (phoneAccount != null && phoneAccount.phone !== account.phone) {
+        return new Result(StatusCodes.BAD_REQUEST, 'Phone already exist.');
+      }
+      account.phone = phone;
+    }
+    // id: number, name: string, userName: string, phone: string
+    // , email: string, address: string, date_of_birth: string, avatar: Express.Multer.File | null
+    // , gender: GenderEnum | null
+    if(name != null) account.name = name;
+    // if(userName != null) account.userName = userName;
+    // if(address != null) account.address = address;
+    if(date_of_birth != null) account.dateOfBirth = date_of_birth;
+    if(gender != null) account.gender = gender;
+    if(avatar != null) {
+      // //save image
+      // account.avatar = a
+    }
+
+    const updatedAccount = accountRepository.save(account);
+    if (updatedAccount !== null) {
+      return new Result(StatusCodes.OK, 'Edit user successfully!');
+    } else {
+      return new Result(StatusCodes.BAD_REQUEST, 'Edit user failed!');
+    }
   }
   static async delete(accountId: number) {
     const account: Account | null = await accountRepository.findOne({
