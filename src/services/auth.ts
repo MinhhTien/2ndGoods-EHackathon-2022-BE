@@ -1,11 +1,13 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../data";
 import Account from "../entities/account";
-import { StatusEnum } from "../utils/app.enum";
+import { OtpEnum, StatusEnum } from "../utils/app.enum";
 import { StatusCodes } from 'http-status-codes';
-import Response from '../utils/result';
+import Result from '../utils/result';
 import jwt from 'jsonwebtoken';
 import config from '../utils/app.config';
+import { AccountOtp } from "../entities/accountOtp";
+import AccountOptService from "./accountOtp";
 
 const accountRepository: Repository<Account> = AppDataSource.getRepository(Account);
 
@@ -25,22 +27,62 @@ export default class AuthService {
         if (account !== null) {
           //Check if encrypted password match
           if (!account.checkIfUnencryptedPasswordIsValid(password)) {
-            return new Response(
+            return new Result(
                 StatusCodes.UNAUTHORIZED,
               'Wrong Password!'
             );
           }
           //Sign JWT, valid for 1 hour
           const token = jwt.sign(
-            { userId: account.id, email: account.email },
+            { accountId: account.id, email: account.email },
             config.JWT_SECRET,
             { expiresIn: '1h' }
           );
-          return new Response(StatusCodes.OK, 'Login successfully', token);
+          return new Result(StatusCodes.OK, 'Login successfully', token);
         } else
-          return new Response(
+          return new Result(
             StatusCodes.BAD_REQUEST,
             'Wrong Email!'
           );
       }
+    
+      static async resetPassword(id: number, password: string) {
+        //Get user from the database
+        let account: Account | null = await accountRepository.findOne({
+          where: {
+            id: id,
+            status: StatusEnum.ACTIVE,
+          },
+        });
+        if (account !== null) {
+          //Validate the model (password lenght)
+          account.password = password;
+          //Hash the new password and save
+          account.hashPassword();
+          accountRepository.save(account);
+    
+          return new Result(StatusCodes.OK, 'Change password successfully!');
+        } else
+          return new Result(
+            StatusCodes.UNAUTHORIZED,
+            'Unauthorized error, user not exist!'
+          );
+      }
+    
+      static async verifyOtp(accountId: number, otp: string, type: OtpEnum) {
+        //VERIFY GENERATED OTP
+        let result = await AccountOptService.getAccountOtp(accountId, type, otp);
+        if (result.getCode() == StatusCodes.OK) {
+          let existOtp: AccountOtp = result.getData();
+          const currentDate = new Date();
+          if (existOtp.otpExpiration > currentDate) {
+            return new Result(StatusCodes.OK, 'Verify OTP successfully!');
+          }
+          await AccountOptService.deleteAccountOtp(accountId, OtpEnum.FORGET, otp);
+          return new Result(StatusCodes.UNAUTHORIZED, 'OTP was expired!');
+        } else {
+          return new Result(StatusCodes.BAD_REQUEST, 'OTP was not right!');
+        }
+      }
+  
 }

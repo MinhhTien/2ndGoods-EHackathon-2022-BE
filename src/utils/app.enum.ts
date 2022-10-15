@@ -28,3 +28,7 @@ export enum StatusReportEnum {
     INACCURATE_MISLEADING = 'INACCURATE_MISLEADING',
     OTHER_REASON = 'OTHER_REASON'
 }
+export enum OtpEnum {
+    FORGET = 'FORGET',
+    VERIFICATION = 'VERIFICATION',
+  }

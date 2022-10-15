@@ -11,13 +11,14 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     if (token == '')
       res
         .status(StatusCodes.PERMANENT_REDIRECT)
-        .send({ message: 'Please Login to ShopP' });
+        .send({ message: 'Please Login to 2ndGoods' });
     let jwtPayload;
     token = token?.replace('Bearer ', '');
     //Try to validate the token and get data
     try {
       jwtPayload = <any>jwt.verify(token, config.JWT_SECRET);
       const account: Account | null = await AccountService.getOneById(jwtPayload.accountId);
+      console.log(account?.id);
       if (account === null) {
         res
           .status(StatusCodes.UNAUTHORIZED)
