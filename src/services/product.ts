@@ -6,15 +6,22 @@ import Account from "../entities/account";
 import { Category } from "../entities/category";
 import { Product } from "../entities/product";
 import { ProductEnum, StatusEnum } from "../utils/app.enum";
+import { LocalFile } from "../entities/localFile";
+import { ProductImage } from "../entities/productImage";
 
 const productRepository =  AppDataSource.getRepository(Product);
 const categoryRepository = AppDataSource.getRepository(Category);
+const productImageRepository = AppDataSource.getRepository(ProductImage);
+
 export default class ProductService{
     static async listAll(){
         const product = await productRepository.find({
             relations: {
               account: true,
               category: true,
+              images: {
+                localFile: true
+              }
             },
             select: {
               id: true,
@@ -42,6 +49,9 @@ export default class ProductService{
             relations: {
                 account: true,
                 category: true,
+                images: {
+                  localFile: true
+                }
               },
               select: {
                 id: true,
@@ -73,6 +83,9 @@ export default class ProductService{
                 relations: {
                 account: true,
                 category: true,
+                images: {
+                  localFile: true
+                }
               },
               select: {
                 id: true,
@@ -104,6 +117,9 @@ export default class ProductService{
                 relations: {
                     account: true,
                     category: true,
+                    images: {
+                      localFile: true
+                    }
                   },
                   select: {
                     id: true,
@@ -135,6 +151,9 @@ export default class ProductService{
                 relations: {
                     account: true,
                     category: true,
+                    images: {
+                      localFile: true
+                    }
                   },
                   select: {
                     id: true,
@@ -166,6 +185,9 @@ export default class ProductService{
                 relations: {
                     account: true,
                     category: true,
+                    images: {
+                      localFile: true
+                    }
                   },
                   select: {
                     id: true,
@@ -199,7 +221,8 @@ export default class ProductService{
             detail: string,
             amount: number,
             quantity: number,
-            status: ProductEnum
+            status: ProductEnum,
+            localFiles: LocalFile[]
           ) {
             const category = await categoryRepository.findOne({
               where: {
@@ -218,7 +241,15 @@ export default class ProductService{
               product.quantity = quantity;
               product.status = status;
         
-              await productRepository.save(product);
+              const productEntity = await productRepository.save(product);
+              let productImage : ProductImage ;
+
+              localFiles.forEach(async localFile => {
+                productImage = new ProductImage();
+                productImage.localFile = localFile;
+                productImage.product = productEntity;
+                await productImageRepository.save(productImage);
+              })
         
               return new Result(
                 StatusCodes.CREATED,

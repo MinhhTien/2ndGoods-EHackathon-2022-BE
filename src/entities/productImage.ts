@@ -13,11 +13,11 @@ import {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @OneToOne(() => LocalFile, localFile => localFile.id)
+    @OneToOne(() => LocalFile)
     @JoinColumn()
     localFile: LocalFile;
   
-    @ManyToOne(() => Product, product => product.id)
+    @ManyToOne(() => Product, product => product.images)
     product: Product;
   }
   

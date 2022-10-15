@@ -18,7 +18,6 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     try {
       jwtPayload = <any>jwt.verify(token, config.JWT_SECRET);
       const account: Account | null = await AccountService.getOneById(jwtPayload.accountId);
-      console.log(account?.id);
       if (account === null) {
         res
           .status(StatusCodes.UNAUTHORIZED)

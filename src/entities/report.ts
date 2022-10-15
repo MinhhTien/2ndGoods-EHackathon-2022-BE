@@ -2,11 +2,10 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
   } from 'typeorm';
-  import { StatusReportEnum } from '../utils/app.enum';
+  import { ReasonReportEnum, StatusReportEnum } from '../utils/app.enum';
 import Account from './account';
   
   @Entity()
@@ -14,7 +13,11 @@ import Account from './account';
     @PrimaryGeneratedColumn()
     id: number;
   
-    @Column()
+    @Column({
+      type: 'enum',
+      enum: ReasonReportEnum,
+      default: ReasonReportEnum.INACCURATE_MISLEADING,
+    })
     reason: string;
   
     @Column()
@@ -27,7 +30,7 @@ import Account from './account';
     @Column({
       type: 'enum',
       enum: StatusReportEnum,
-      default: StatusReportEnum.INACCURATE_MISLEADING,
+      default: StatusReportEnum.PROCESSED,
     })
     status: StatusReportEnum;
 
