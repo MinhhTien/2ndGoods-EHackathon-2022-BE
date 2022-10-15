@@ -7,7 +7,6 @@ import {
     OneToOne,
     ManyToMany,
     OneToMany,
-    ManyToOne,
 } from 'typeorm';
 
 import bcrypt from 'bcryptjs';

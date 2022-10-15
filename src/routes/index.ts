@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import  product from './product';
 import account from './account';
 import auth from './auth';
@@ -8,13 +8,12 @@ import voucher from './voucher';
 import order from './order';
 import payment from './payment';
 import orderProduct from './orderProduct';
+import UploadService from '../services/upload';
 
 const routes = Router();
 
-routes.use('/get', async (req, res) => {
-    res.send('Hello World!');
-});
-
+routes.get('/files/:name', UploadService.getImage);
+routes.use('/images', express.static(__dirname + '/public/uploads'));
 routes.use('/auth', auth);
 routes.use('/account', account);
 routes.use('/product', product);

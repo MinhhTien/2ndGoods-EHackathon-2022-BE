@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductMiddleware from "../controllers/product";
 import { checkJwt } from "../middlewares/checkJwt";
+import { uploadMultipleImage } from '../middlewares/fileProvider';
 
 const routes = Router();
 
@@ -21,7 +22,8 @@ routes.get(
 routes.get('/search-by-account/:id', ProductMiddleware.searchByAccount);
 
 routes.post(
-  '/new', checkJwt,
+  '/new', checkJwt, 
+  uploadMultipleImage('images'),
   ProductMiddleware.postNew
 );
 

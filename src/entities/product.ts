@@ -57,8 +57,7 @@ import { ProductImage } from './productImage';
     @ManyToOne(() => Category, category => category.id)
     category: Category;
   
-    @OneToMany(() => ProductImage, images => images.id)
-    @JoinColumn()
+    @OneToMany(() => ProductImage, images => images.product)
     images: ProductImage[];
   
     @OneToMany(() => OrderProduct, orderProduct => orderProduct.id)
