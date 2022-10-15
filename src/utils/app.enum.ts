@@ -21,6 +21,7 @@ export enum OrderStatusEnum {
     CONFIRMED = 'CONFIRMED',
     DELIVERING = 'DELIVERING',
     DONE = 'DONE',
+    CANCER = 'CANCER'
 }
 
 export enum ReasonReportEnum {
