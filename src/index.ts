@@ -15,7 +15,7 @@ import UserSocket from './utils';
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ origin: "http://127.0.0.1:8080" }));
+app.use(cors({ origin: true }));
 app.use(helmet());
 app.use(routes);
 app.use(express.static('public/uploads'));
