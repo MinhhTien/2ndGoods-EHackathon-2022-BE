@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import AccountController from '../controllers/account';
-import { checkJwt } from '../middlewares/checkJwt';
+import { checkJwt, getAccountByJwt } from '../middlewares/checkJwt';
 import { uploadImage } from '../middlewares/fileProvider';
 
 const routes = Router();
 
 //Login route
 routes.get('/:id([0-9]+)', checkJwt, AccountController.getOneById);
+
+routes.get('/get-by-token', getAccountByJwt);
 
 //Create a new account
 routes.post('/sign-up', AccountController.postNew);

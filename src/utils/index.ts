@@ -40,3 +40,7 @@ const isValidDate = (dateStr: string): boolean => {
 }
 
 export { generateOtp, deleteFile, isValidDate };
+export default class UserSocket {
+  userId: number;
+  socketId: string;
+}

@@ -9,6 +9,8 @@ import helmet from 'helmet';
 import http from 'http';
 import chalk from 'chalk';
 import { Server } from "socket.io";
+import Account from './entities/account';
+import UserSocket from './utils';
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,21 +24,43 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://127.0.0.1:8080",
+    origin: ["http://127.0.0.1:3000", "http://127.0.0.1:3001"],
     credentials: true,
   }
 });
-io.on("connect", (socket: any) => {
-  // Say Hi to all connected clients
-  io.emit('broadcast', '[Server]: Welcome stranger!');
-  console.log("a user connected");
-  // whenever we receive a 'message' we log it out
-  socket.on("message", (message: any) => {
-    console.log(message);
-    io.emit('message', message);
-  });
-});
 
+let activeUsers : UserSocket[] = [];
+
+io.on("connection", (socket: any) => {
+  //add new User
+  socket.on("new-user-add", (newUserId: number) => {
+    if(!activeUsers.some((user) => user.userId === newUserId)) {
+      activeUsers.push({ userId: newUserId, socketId: socket.id });
+      console.log("New Account Connected", activeUsers);
+    }
+    //send all active users to new user
+    io.emit("get-users", activeUsers);
+  });
+
+  socket.on("disconnect", () => {
+    // remove user from active users
+    activeUsers = activeUsers.filter(user => user.socketId !== socket.id);
+    console.log("User Disconnected", activeUsers);
+    // send all active users to all users
+    io.emit("get-user", activeUsers);
+  })
+
+  //send message to a specific user
+  socket.on("send-message", (data: any) => {
+    const { receiverId } = data;
+    const user = activeUsers.find(user => user.userId === receiverId);
+    console.log("Sending from socket to :", receiverId);
+    console.log("Data: ", data);
+    if(user) {
+      io.to(user.socketId).emit("receive-message", data);
+    }
+  })
+});
 
 AppDataSource.initialize()
   .then(source => {
