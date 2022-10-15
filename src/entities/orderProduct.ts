@@ -1,5 +1,4 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import Account from "./account";
 import { Order } from "./order";
 import { Product } from "./product";
 
@@ -16,9 +15,6 @@ export class OrderProduct{
 
     @Column()
     additionalInfo: string;
-
-    @ManyToOne(() => Account, account => account.id)
-    account: Account;
 
     @ManyToOne(() => Product, product => product.id)
     product: Product;

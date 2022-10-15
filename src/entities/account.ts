@@ -19,6 +19,7 @@ import { Cart } from './cart';
 import { Voucher } from './voucher';
 import { OrderProduct } from './orderProduct';
 import { Report } from './report';
+import { Order } from './order';
 
 @Entity()
 export default class Account {
@@ -84,8 +85,8 @@ export default class Account {
     @ManyToMany(() => Voucher, voucher => voucher.id)
     voucher: Voucher[];
 
-    @OneToMany(() => OrderProduct, orderProduct => orderProduct.id)
-    orderProduct: OrderProduct[];
+    @OneToMany(() => Order, order => order.id)
+    order: Order[];
 
     @OneToMany(() => Report, report => report.id)
     report: Report[]

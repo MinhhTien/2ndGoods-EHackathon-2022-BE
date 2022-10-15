@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderStatusEnum, StatusEnum } from "../utils/app.enum";
+import Account from "./account";
 import { OrderProduct } from "./orderProduct";
 import { Payment } from "./payment";
 import { Voucher } from "./voucher";
@@ -27,6 +28,9 @@ export class Order{
         default: OrderStatusEnum.CHECKING
     })
     status: OrderStatusEnum;
+
+    @ManyToOne(() => Account, account => account.id)
+    account: Account;
 
     @ManyToOne(() => Payment, payment => payment.id)
     payment: Payment;
