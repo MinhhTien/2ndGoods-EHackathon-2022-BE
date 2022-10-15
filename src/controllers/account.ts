@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import AccountService from "../services/account";
 import { ControllerService } from "../utils/decorators";
 import { StatusCodes } from 'http-status-codes';
+import { LocalFile } from "../entities/localFile";
+import UploadService from "../services/upload";
 
 export default class AccountController {
     @ControllerService()
@@ -18,44 +20,44 @@ export default class AccountController {
     }
     @ControllerService({
         body: [
-          {
-            name: 'oldPassword',
-            type: String,
-            validator: (propName: string, value: string) => {
-              const pwdRegExp: RegExp =
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-              if (!pwdRegExp.test(value))
-                return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
-              return null;
+            {
+                name: 'oldPassword',
+                type: String,
+                validator: (propName: string, value: string) => {
+                    const pwdRegExp: RegExp =
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+                    if (!pwdRegExp.test(value))
+                        return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
+                    return null;
+                },
             },
-          },
-          {
-            name: 'newPassword',
-            type: String,
-            validator: (propName: string, value: string) => {
-              const pwdRegExp: RegExp =
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-              if (!pwdRegExp.test(value))
-                return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
-              return null;
+            {
+                name: 'newPassword',
+                type: String,
+                validator: (propName: string, value: string) => {
+                    const pwdRegExp: RegExp =
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+                    if (!pwdRegExp.test(value))
+                        return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
+                    return null;
+                },
             },
-          },
         ],
-      })
-      static async changePassword(req: Request, res: Response) {
+    })
+    static async changePassword(req: Request, res: Response) {
         //Get ID from JWT
         const id = res.locals.account.id;
-    
+
         //Get parameters from the body
         const data = req.body;
-    
+
         const result = await AccountService.changePassword(
-          id,
-          data.oldPassword,
-          data.newPassword
+            id,
+            data.oldPassword,
+            data.newPassword
         );
         res.status(result.getCode()).send({ message: result.getMessage() });
-      }
+    }
     @ControllerService({
         body: [
             {
@@ -115,6 +117,27 @@ export default class AccountController {
             res.status(result.getCode()).send({ message: result.getMessage() });
         }
     }
+
+    @ControllerService()
+    static async edit(req: Request, res: Response) {
+        var localFile = null;
+        if (req.file != undefined) {
+            localFile = await UploadService.upload(req.file);
+        }
+        const data = req.body;
+        const result = await AccountService.edit(
+            res.locals.account.id,
+            data.name,
+            data.userName,
+            data.phone,
+            data.address,
+            data.dateOfBirth,
+            localFile,
+            data.gender
+        );
+        res.status(result.getCode()).send({ message: result.getMessage() });
+    }
+
 
     @ControllerService()
     static async delete(req: Request, res: Response) {
