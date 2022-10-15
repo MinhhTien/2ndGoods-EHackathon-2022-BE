@@ -14,8 +14,9 @@ import {
   import { ProductEnum } from '../utils/app.enum';
   import  Account  from './account';
   import { Category } from './category';
+  import { LocalFile } from './localFile';
   import { OrderProduct } from './orderProduct';
-  import { ProductImage } from './productImage';
+import { ProductImage } from './productImage';
   
   @Entity()
   export class Product {
@@ -25,7 +26,7 @@ import {
     @Column()
     name: string;
   
-    @Column()
+    @Column({nullable: true})
     detail: string;
   
     @Column()
@@ -37,9 +38,6 @@ import {
     @Column({ default: 0 })
     sold: number;
   
-    @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
-    star: number;
-  
     @Column({
       type: 'enum',
       enum: ProductEnum,
@@ -47,7 +45,6 @@ import {
     })
     status: ProductEnum;
   
-    @Column()
     @CreateDateColumn()
     createdAt: Date;
   
@@ -55,16 +52,14 @@ import {
     deletedAt: Date;
   
     @ManyToOne(() => Account, account => account.id)
-    @JoinColumn()
     account: Account;
   
-    @ManyToMany(() => Category, category => category.id)
-    @JoinTable()
-    category: Category[];
+    @ManyToOne(() => Category, category => category.id)
+    category: Category;
   
-    @OneToMany(() => ProductImage, productImage => productImage.id)
+    @OneToMany(() => ProductImage, images => images.id)
     @JoinColumn()
-    productImage: ProductImage[];
+    images: ProductImage[];
   
     @OneToMany(() => OrderProduct, orderProduct => orderProduct.id)
     orderProduct: OrderProduct[];

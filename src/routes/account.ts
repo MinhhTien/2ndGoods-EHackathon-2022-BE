@@ -8,7 +8,7 @@ const routes = Router();
 routes.get('/:id([0-9]+)', checkJwt, AccountController.getOneById);
 
 //Create a new user
-routes.post('/sign-up', checkJwt, AccountController.postNew);
+routes.post('/sign-up',AccountController.postNew);
 
 //Change password account
 routes.post('/change-password', checkJwt, AccountController.changePassword);

@@ -1,12 +1,10 @@
 import {
     Column,
     Entity,
-    JoinColumn,
-    OneToMany,
-    OneToOne,
+    ManyToOne,
     PrimaryGeneratedColumn,
   } from 'typeorm';
-import { ProductImage } from './productImage';
+import { Product } from './product';
   
   @Entity()
   export class LocalFile {
@@ -18,8 +16,5 @@ import { ProductImage } from './productImage';
   
     @Column()
     path: string;
-
-    @OneToOne(() => ProductImage, productImage => productImage.id)
-    productImage: ProductImage[];
-  }
+   }
   

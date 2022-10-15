@@ -20,9 +20,6 @@ export class OrderProduct{
     @ManyToOne(() => Account, account => account.id)
     account: Account;
 
-    @ManyToOne(() => Account, seller => seller.id)
-    seller: Account;
-
     @ManyToOne(() => Product, product => product.id)
     product: Product;
 

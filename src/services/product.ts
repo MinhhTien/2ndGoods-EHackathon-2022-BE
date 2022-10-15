@@ -24,7 +24,6 @@ export default class ProductService{
               quantity: true,
               status: true,
               sold: true,
-              star: true,
               account: { name: true },
               category: { name: true },
             },
@@ -52,7 +51,6 @@ export default class ProductService{
                 quantity: true,
                 status: true,
                 sold: true,
-                star: true,
                 account: { name: true },
                 category: { name: true },
               },
@@ -84,7 +82,6 @@ export default class ProductService{
                 quantity: true,
                 status: true,
                 sold: true,
-                star: true,
                 account: { name: true },
                 category: { name: true },
               },
@@ -116,7 +113,6 @@ export default class ProductService{
                     quantity: true,
                     status: true,
                     sold: true,
-                    star: true,
                     account: { name: true },
                     category: { name: true },
                   },
@@ -148,7 +144,6 @@ export default class ProductService{
                     quantity: true,
                     status: true,
                     sold: true,
-                    star: true,
                     account: { name: true },
                     category: { name: true },
                   },
@@ -180,7 +175,6 @@ export default class ProductService{
                     quantity: true,
                     status: true,
                     sold: true,
-                    star: true,
                     account: { name: true },
                     category: { name: true },
                   },
@@ -207,7 +201,7 @@ export default class ProductService{
             quantity: number,
             status: ProductEnum
           ) {
-            const category = await categoryRepository.find({
+            const category = await categoryRepository.findOne({
               where: {
                 id: categoryId,
               },
@@ -243,7 +237,7 @@ export default class ProductService{
             quantity: number,
             status: ProductEnum
           ){
-            const category = await categoryRepository.find({
+            const category = await categoryRepository.findOne({
               where: {
                 id: categoryId
               }

@@ -18,6 +18,7 @@ export enum ProductEnum {
 
 export enum OrderStatusEnum {
     CHECKING = 'CHECKING',
+    CONFIRMED = 'CONFIRMED',
     DELIVERY = 'DELIVERY',
     DONE = 'DONE',
 }

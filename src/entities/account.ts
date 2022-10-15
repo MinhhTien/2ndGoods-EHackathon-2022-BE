@@ -28,7 +28,7 @@ export default class Account {
     @Column({ length: 100, nullable: true })
     name: string
 
-    @Column()
+    @Column({nullable: true})
     userName: string
 
     @Column({ length: 100 })

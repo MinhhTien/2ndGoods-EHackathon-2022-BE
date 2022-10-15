@@ -18,7 +18,11 @@ import Account from './account';
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
   
-    @ManyToOne(() => Account, account => account.id)
-    account: Account;
+    @ManyToOne(() => Account, receiver => receiver.id)
+    receiver: Account;
+
+    @ManyToOne(() => Account, sender => sender.id)
+    sender: Account;
+
   }
   
