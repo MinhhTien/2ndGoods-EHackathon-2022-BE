@@ -16,16 +16,59 @@ export default class AccountController {
                 .send({ message: 'Account not exist!' });
         }
     }
-
     @ControllerService({
         body: [
+          {
+            name: 'oldPassword',
+            type: String,
+            validator: (propName: string, value: string) => {
+              const pwdRegExp: RegExp =
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+              if (!pwdRegExp.test(value))
+                return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
+              return null;
+            },
+          },
+          {
+            name: 'newPassword',
+            type: String,
+            validator: (propName: string, value: string) => {
+              const pwdRegExp: RegExp =
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+              if (!pwdRegExp.test(value))
+                return `${propName} must constain 8 characters or longer, at least one lowercase, one uppercase, one number and one special character`;
+              return null;
+            },
+          },
+        ],
+      })
+      static async changePassword(req: Request, res: Response) {
+        //Get ID from JWT
+        const id = res.locals.account.id;
+    
+        //Get parameters from the body
+        const data = req.body;
+    
+        const result = await AccountService.changePassword(
+          id,
+          data.oldPassword,
+          data.newPassword
+        );
+        res.status(result.getCode()).send({ message: result.getMessage() });
+      }
+    @ControllerService({
+        body: [
+            {
+                name: 'name',
+                type: String
+            },
             {
                 name: 'email',
                 type: String,
                 validator: (propName: string, value: string) => {
-                    const emailRegExp: RegExp = /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/;
+                    const emailRegExp: RegExp = /^[\w\.-]+@fpt.edu.vn$/;
                     if (!emailRegExp.test(value))
-                        return `${propName} must be valid email`;
+                        return `${propName} must be email @fpt.edu.vn`;
                     return null;
                 },
             },
@@ -60,6 +103,7 @@ export default class AccountController {
                 .status(StatusCodes.BAD_REQUEST)
                 .send({ message: 'Confirmed Password must be equal to Password' });
         const result = await AccountService.postNew(
+            data.name,
             String(data.email).toLowerCase(),
             data.password
         );
@@ -71,6 +115,7 @@ export default class AccountController {
             res.status(result.getCode()).send({ message: result.getMessage() });
         }
     }
+
     @ControllerService()
     static async delete(req: Request, res: Response) {
         const id = res.locals.user.id;

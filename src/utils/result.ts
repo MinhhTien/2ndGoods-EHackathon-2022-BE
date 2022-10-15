@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 
-export default class Response {
+export default class Result {
   public constructor(
     private code: StatusCodes,
     private message: string,

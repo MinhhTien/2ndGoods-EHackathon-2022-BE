@@ -1,0 +1,9 @@
+dist
+node_modules
+test
+.gitignore
+README.md
+LICENSE
+package-lock.json
+.github
+.vscode

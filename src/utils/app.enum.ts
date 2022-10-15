@@ -9,3 +9,8 @@ export enum GenderEnum {
     FEMALE = 'FEMALE',
     OTHERS = 'OTHERS'
 }
+
+export enum OtpEnum {
+    FORGET = 'FORGET',
+    VERIFICATION = 'VERIFICATION',
+  }

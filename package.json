@@ -10,16 +10,16 @@
     "dev": "nodemon"
   },
   "repository": {
-     "type": "git",
-     "url": "https://github.com/MinhhTien/2ndGoods-EHackathon-2022-BE.git"
+    "type": "git",
+    "url": "https://github.com/MinhhTien/2ndGoods-EHackathon-2022-BE.git"
   },
   "keywords": [
-     "Backend",
-     "ORM",
-     "Typescript",
-     "NodeJS",
-     "MySQL",
-     "Database"
+    "Backend",
+    "ORM",
+    "Typescript",
+    "NodeJS",
+    "MySQL",
+    "Database"
   ],
   "author": "BE Team EHackathon",
   "license": "MIT",
@@ -36,6 +36,8 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.8.0",
+    "socket.io": "^4.5.2",
     "typeorm": "^0.3.7"
   },
   "devDependencies": {
@@ -46,6 +48,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/multer": "^1.4.7",
     "@types/mysql": "^2.15.21",
+    "@types/nodemailer": "^6.4.6",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
