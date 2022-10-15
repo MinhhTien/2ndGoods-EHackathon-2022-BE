@@ -91,14 +91,7 @@ export default class ProductMiddleware{
         }
       }
     
-      @ControllerService({
-        params: [
-          {
-            name: 'shopId',
-            type: String,
-          },
-        ],
-      })
+      @ControllerService()
       static async searchByAccount(req: Request, res: Response) {
         const id = +req.params.id;
         const result = await ProductService.searchByAccount(id);
@@ -118,7 +111,7 @@ export default class ProductMiddleware{
             type: String,
           },
           {
-            name: 'category',
+            name: 'categoryId',
             type: String,
           },
     
@@ -150,7 +143,7 @@ export default class ProductMiddleware{
       })
       static async postNew(req: Request, res: Response) {
         const data = req.body;
-        const account: Account = res.locals.account;
+        const account = res.locals.account;
         if (account == null) {
           res
             .status(StatusCodes.BAD_REQUEST)

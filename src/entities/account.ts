@@ -25,11 +25,14 @@ export default class Account {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100, nullable: true })
+    @Column({ length: 100 })
     name: string
 
     @Column({nullable: true})
     userName: string
+
+    @Column({nullable: true})
+    address: string
 
     @Column({ length: 100 })
     email: string;
@@ -86,7 +89,6 @@ export default class Account {
 
     @OneToMany(() => Report, report => report.id)
     report: Report[]
-
 
     @OneToMany(() => Message, message => message.id)
     message: Message[];

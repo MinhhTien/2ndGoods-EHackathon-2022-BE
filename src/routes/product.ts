@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductMiddleware from "../controllers/product";
+import { checkJwt } from "../middlewares/checkJwt";
 
 const routes = Router();
 
@@ -20,17 +21,17 @@ routes.get(
 routes.get('/search-by-account/:id', ProductMiddleware.searchByAccount);
 
 routes.post(
-  '/new',
+  '/new', checkJwt,
   ProductMiddleware.postNew
 );
 
 routes.post(
-  '/edit/:id',
+  '/edit/:id',checkJwt,
   ProductMiddleware.edit
 );
 
 routes.post(
-  '/delete/:id',
+  '/delete/:id',checkJwt,
   ProductMiddleware.delete
 );
 export default routes;
