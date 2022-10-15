@@ -3,6 +3,7 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
     OneToMany,
+    Column,
   } from 'typeorm';
 import Account from './account';
 import { Product } from './product';
@@ -11,6 +12,9 @@ import { Product } from './product';
   export class Cart {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column()
+    quantity: number;
   
     @OneToMany(() => Product, product => product.id)
     product: Product[];

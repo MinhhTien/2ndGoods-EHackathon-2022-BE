@@ -23,12 +23,18 @@ export enum OrderStatusEnum {
     DONE = 'DONE',
 }
 
-export enum StatusReportEnum {
+export enum ReasonReportEnum {
     CONATAIN_SENSITIVE_INFO = 'CONATAIN_SENSITIVE_INFO',
     SCAM = 'SCAM',
     INACCURATE_MISLEADING = 'INACCURATE_MISLEADING',
     OTHER_REASON = 'OTHER_REASON'
 }
+
+export enum StatusReportEnum{
+    PROCESSED = 'PROCESSED',
+    PROCESSING = 'PROCESSING'
+}
+
 export enum OtpEnum {
     FORGET = 'FORGET',
     VERIFICATION = 'VERIFICATION',
