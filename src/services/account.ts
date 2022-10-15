@@ -3,7 +3,7 @@ import { AppDataSource } from "../data";
 import Account from "../entities/account";
 import { StatusEnum } from "../utils/app.enum";
 import { StatusCodes } from 'http-status-codes';
-import Response from '../utils/response';
+import Response from '../utils/result';
 
 const accountRepository: Repository<Account> = AppDataSource.getRepository(Account);
 

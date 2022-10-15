@@ -1,188 +1,273 @@
-import { Like } from "typeorm";
-import { AppDataSource } from "../data";
-import { Product } from "../entities/product";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import Account from "../entities/account";
+import ProductService from "../services/product";
 import { ProductEnum } from "../utils/app.enum";
+import { ControllerService } from "../utils/decorators";
 
-const productRepository =  AppDataSource.getRepository(Product);
-export default class ProdictMoodel{
-    static async listAll(){
-        const product = await productRepository.find({
-            relations: {
-              account: true,
-              category: true,
+export default class ProductMiddleware{
+    @ControllerService()
+    static async listAll(req: Request, res: Response) {
+        const result = await ProductService.listAll();
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+
+      @ControllerService({
+        params: [
+          {
+            name: 'id',
+            type: String,
+          },
+        ],
+      })
+      static async getOneById(req: Request, res: Response) {
+        const id = req.params.id;
+        const result = await ProductService.getOneById(id);
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+    
+      @ControllerService({
+        params: [
+          {
+            name: 'name',
+            type: String,
+          },
+        ],
+      })
+      static async searchByName(req: Request, res: Response) {
+        const name = req.params.name;
+        const result = await ProductService.searchByName(name);
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+    
+      @ControllerService()
+      static async searchByCategoryId(req: Request, res: Response) {
+        const id = +req.params.categoryId;
+        const result = await ProductService.searchByCategoryId(id);
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+    
+      @ControllerService({
+        params: [
+          {
+            name: 'name',
+            type: String,
+          },
+        ],
+      })
+      static async searchByCategory(req: Request, res: Response) {
+        const name = req.params.name;
+        const result = await ProductService.searchByCategory(name);
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+    
+      @ControllerService({
+        params: [
+          {
+            name: 'shopId',
+            type: String,
+          },
+        ],
+      })
+      static async searchByAccount(req: Request, res: Response) {
+        const id = +req.params.id;
+        const result = await ProductService.searchByAccount(id);
+        if (result) {
+          res.status(StatusCodes.OK).send({ data: result });
+        } else {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Get Product failed!' });
+        }
+      }
+    
+      @ControllerService({
+        body: [
+          {
+            name: 'name',
+            type: String,
+          },
+          {
+            name: 'category',
+            type: String,
+          },
+    
+          {
+            name: 'detail',
+            type: String,
+          },
+          {
+            name: 'amount',
+            type: String,
+            validator: (propName: string, value: number) => {
+              if (value < 0 || value > 100000000) {
+                return `${propName} must be greater than 0 and less than 100000000`;
+              }
+              return null;
             },
-            select: {
-              id: true,
-              name: true,
-              detail: true,
-              amount: true,
-              status: true,
-              sold: true,
-              star: true,
-              account: { name: true },
-              category: { name: true },
+          },
+          {
+            name: 'quantity',
+            type: String,
+            validator: (propName: string, value: number) => {
+              if (value < 0 || value > 10000) {
+                return `${propName} must be greater than 0 and less than 10000`;
+              }
+              return null;
             },
-            where: [
-              {
-                status: ProductEnum.AVAILABLE,
-              },
-              { status: ProductEnum.OUT_OF_ORDER },
-            ],
-          });
-          return product && product.length > 0 ? product : false;
+          },
+        ],
+      })
+      static async postNew(req: Request, res: Response) {
+        const data = req.body;
+        const account: Account = res.locals.account;
+        if (account == null) {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: 'Can not find account' });
         }
-
-       static async getOneById(id: string){
-        const product = await productRepository.find({
-            relations: {
-                account: true,
-                category: true,
-              },
-              select: {
-                id: true,
-                name: true,
-                detail: true,
-                amount: true,
-                status: true,
-                sold: true,
-                star: true,
-                account: { name: true },
-                category: { name: true },
-              },
-              where: [
-                {
-                  id: id,  
-                  status: ProductEnum.AVAILABLE,
-                },
-                { 
-                    id: id,
-                    status: ProductEnum.OUT_OF_ORDER 
-                },
-              ],
-            });
-            return product ? product : false
-          }
-
-        static async searchProductByName(name: string){
-            const product = await productRepository.find({
-                relations: {
-                account: true,
-                category: true,
-              },
-              select: {
-                id: true,
-                name: true,
-                detail: true,
-                amount: true,
-                status: true,
-                sold: true,
-                star: true,
-                account: { name: true },
-                category: { name: true },
-              },
-              where: [
-                {
-                  name: Like(`%${name}%`),  
-                  status: ProductEnum.AVAILABLE,
-                },
-                { 
-                    name: Like(`%${name}%`),
-                    status: ProductEnum.OUT_OF_ORDER 
-                },
-              ],
-            })
-            return product ? product : false
+        const result = await ProductService.postNew(
+          account,
+          data.name,
+          data.categoryId,
+          data.detail.toString(),
+          data.amount,
+          data.quantity,
+          ProductEnum.AVAILABLE
+        );
+    
+        if (result.getCode() === StatusCodes.CREATED) {
+          res
+            .status(result.getCode())
+            .send({ message: result.getMessage(), data: result.getData() });
+        } else {
+          res.status(result.getCode()).send({ message: result.getMessage() });
         }
-        
-        static async searchByCategory(category: string){
-            const product = await productRepository.find({
-                relations: {
-                    account: true,
-                    category: true,
-                  },
-                  select: {
-                    id: true,
-                    name: true,
-                    detail: true,
-                    amount: true,
-                    status: true,
-                    sold: true,
-                    star: true,
-                    account: { name: true },
-                    category: { name: true },
-                  },
-                  where: [
-                    {
-                        category: { name: Like(`%${category}%`) },  
-                      status: ProductEnum.AVAILABLE,
-                    },
-                    { 
-                        category: { name: Like(`%${category}%`) },
-                        status: ProductEnum.OUT_OF_ORDER 
-                    },
-                  ],
-                })
-                return product ? product: false
+      }
+    
+      @ControllerService({
+        params: [
+          {
+            name: 'id',
+            type: String,
+          },
+        ],
+        body: [
+          {
+            name: 'name',
+            type: String,
+          },
+          {
+            name: 'category',
+            type: String,
+          },
+    
+          {
+            name: 'detail',
+            type: String,
+          },
+          {
+            name: 'amount',
+            type: String,
+            validator: (propName: string, value: number) => {
+              if (value < 0 || value > 100000000) {
+                return `${propName} must be greater than 0 and less than 100000000`;
+              }
+              return null;
+            },
+          },
+          {
+            name: 'quantity',
+            type: String,
+            validator: (propName: string, value: number) => {
+              if (value < 0 || value > 10000) {
+                return `${propName} must be greater than 0 and less than 10000`;
+              }
+              return null;
+            },
+          },
+          {
+            name: 'status',
+            type: String,
+            validator: (propName: string, value: string) => {
+              if (
+                value.toUpperCase() !== 'AVAILABLE' &&
+                value.toUpperCase() !== 'OUT-OF-ORDER'
+              )
+                return `${propName} is only AVAILABLE or OUT-OF-ORDER`;
+              return null;
+            },
+          },
+        ],
+      })
+      static async edit(req: Request, res: Response) {
+        const data = req.body;
+        const id = req.params.id;
+        let status: ProductEnum;
+        if (data.status.toString().toUpperCase() === 'AVAILABLE') {
+          status = ProductEnum.AVAILABLE;
+        } else {
+          status = ProductEnum.OUT_OF_ORDER;
         }
-
-        static async searchByCategoryId(id: number){
-            const product = await productRepository.find({
-                relations: {
-                    account: true,
-                    category: true,
-                  },
-                  select: {
-                    id: true,
-                    name: true,
-                    detail: true,
-                    amount: true,
-                    status: true,
-                    sold: true,
-                    star: true,
-                    account: { name: true },
-                    category: { name: true },
-                  },
-                  where: [
-                    {
-                      category: { id: id },  
-                      status: ProductEnum.AVAILABLE,
-                    },
-                    { 
-                        category: { id: id },  
-                        status: ProductEnum.OUT_OF_ORDER 
-                    },
-                  ],
-            })
-            return product ? product : false
+        const result = await ProductService.edit(
+          id,
+          data.name,
+          data.category,
+          data.detail.toString(),
+          data.amount,
+          data.quantity,
+          status
+        );
+        if (result.getCode() === StatusCodes.OK) {
+          res
+            .status(result.getCode())
+            .send({ message: result.getMessage(), data: result.getData() });
+        } else {
+          res.status(result.getCode()).send({ message: result.getMessage() });
         }
-
-        static async searchByAccount(id: number){
-            const product = await productRepository.find({
-                relations: {
-                    account: true,
-                    category: true,
-                  },
-                  select: {
-                    id: true,
-                    name: true,
-                    detail: true,
-                    amount: true,
-                    status: true,
-                    sold: true,
-                    star: true,
-                    account: { name: true },
-                    category: { name: true },
-                  },
-                  where: [
-                    {
-                      category: { id: id },  
-                      status: ProductEnum.AVAILABLE,
-                    },
-                    { 
-                        category: { id: id },  
-                        status: ProductEnum.OUT_OF_ORDER 
-                    },
-                  ],
-            })
-        }
+      }
+    
+      @ControllerService({
+        params: [
+          {
+            name: 'id',
+            type: String,
+          },
+        ],
+      })
+      static async delete(req: Request, res: Response) {
+        const id = req.params.id;
+        const result = await ProductService.delete(id);
+        res.status(result.getCode()).send({ message: result.getMessage() });
+      }  
 }

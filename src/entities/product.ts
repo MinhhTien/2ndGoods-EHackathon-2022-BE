@@ -7,6 +7,8 @@ import {
     JoinColumn,
     OneToMany,
     OneToOne,
+    ManyToMany,
+    JoinTable,
   } from 'typeorm';
   
   import { ProductEnum } from '../utils/app.enum';
@@ -28,6 +30,9 @@ import {
   
     @Column()
     amount: number;
+
+    @Column()
+    quantity: number;
   
     @Column({ default: 0 })
     sold: number;
@@ -53,9 +58,9 @@ import {
     @JoinColumn()
     account: Account;
   
-    @ManyToOne(() => Category, category => category.id)
-    @JoinColumn()
-    category: Category;
+    @ManyToMany(() => Category, category => category.id)
+    @JoinTable()
+    category: Category[];
   
     @OneToMany(() => ProductImage, productImage => productImage.id)
     @JoinColumn()
