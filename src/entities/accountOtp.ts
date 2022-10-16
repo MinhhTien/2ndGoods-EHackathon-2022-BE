@@ -7,8 +7,8 @@ export class AccountOtp {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Account)
-  account: Account;
+  @Column()
+  email: string;
 
   @Column({
     type: 'enum',

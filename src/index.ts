@@ -17,7 +17,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ origin: true }));
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: true,
+}));
 app.use(routes);
 app.use(express.static('public/uploads'));
 
@@ -30,12 +32,12 @@ const io = new Server(server, {
   }
 });
 
-let activeUsers : UserSocket[] = [];
+let activeUsers: UserSocket[] = [];
 
 io.on("connection", (socket: any) => {
   //add new User
   socket.on("new-user-add", (newUserId: number) => {
-    if(!activeUsers.some((user) => user.userId === newUserId)) {
+    if (!activeUsers.some((user) => user.userId === newUserId)) {
       activeUsers.push({ userId: newUserId, socketId: socket.id });
       console.log("New Account Connected", activeUsers);
     }
@@ -57,7 +59,7 @@ io.on("connection", (socket: any) => {
     const user = activeUsers.find(user => user.userId === receiverId);
     console.log("Sending from socket to :", receiverId);
     console.log("Data: ", data);
-    if(user) {
+    if (user) {
       io.to(user.socketId).emit("receive-message", data);
     }
   })
@@ -66,10 +68,10 @@ io.on("connection", (socket: any) => {
 AppDataSource.initialize()
   .then(source => {
     server.listen(Config.PORT, () => {
-        console.log(
-            chalk.magenta.bold(
-                `2ndGoods server is listening at port ${Config.PORT}!`)
-        );
+      console.log(
+        chalk.magenta.bold(
+          `2ndGoods server is listening at port ${Config.PORT}!`)
+      );
       server.emit('ok');
     });
   })
