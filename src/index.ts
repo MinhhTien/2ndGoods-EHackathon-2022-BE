@@ -13,8 +13,10 @@ import { Server } from "socket.io";
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ origin: "http://127.0.0.1:8080" }));
-app.use(helmet());
+app.use(cors({ origin: true }));
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 app.use(routes);
 app.use(express.static('public/uploads'));
 
@@ -41,10 +43,10 @@ io.on("connect", (socket: any) => {
 AppDataSource.initialize()
   .then(source => {
     server.listen(Config.PORT, () => {
-        console.log(
-            chalk.magenta.bold(
-                `2ndGoods server is listening at port ${Config.PORT}!`)
-        );
+      console.log(
+        chalk.magenta.bold(
+          `2ndGoods server is listening at port ${Config.PORT}!`)
+      );
       server.emit('ok');
     });
   })
