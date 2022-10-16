@@ -2,13 +2,13 @@ import path from 'path';
 import fs from 'fs';
 
 //GENERATE OTP
-const generateOtp = (len: number): string => {
+const generateCode = (len: number): string => {
   const digits = '0123456789';
-  let OTP = '';
+  let code = '';
   for (let i = 0; i < len; i++) {
-    OTP += digits[Math.floor(Math.random() * 10)];
+    code += digits[Math.floor(Math.random() * 10)];
   }
-  return OTP;
+  return code;
 };
 
 //Delete file in public/uploads
@@ -39,7 +39,7 @@ const isValidDate = (dateStr: string): boolean => {
   return date.toISOString().startsWith(dateStr);
 }
 
-export { generateOtp, deleteFile, isValidDate };
+export { generateCode, deleteFile, isValidDate };
 export default class UserSocket {
   userId: number;
   socketId: string;

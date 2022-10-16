@@ -39,7 +39,7 @@ export default class OrderProductService {
         quantity: number,
         additionalInfo: string,
         productId: string,
-        orderNumber: string,
+        orderNumber: string
       ) {
         const product = await productRepository.findOne({
           where: {

@@ -5,7 +5,7 @@ import { GenderEnum, StatusEnum } from "../utils/app.enum";
 import { StatusCodes } from 'http-status-codes';
 import Result from '../utils/result';
 import { LocalFile } from "../entities/localFile";
-import { isValidDate} from "../utils";
+import { isValidDate } from "../utils";
 import { Cart } from "../entities/cart";
 
 const accountRepository: Repository<Account> = AppDataSource.getRepository(Account);
