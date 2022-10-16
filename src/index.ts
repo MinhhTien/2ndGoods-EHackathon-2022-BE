@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ origin: true }));
 app.use(helmet({
-  crossOriginResourcePolicy: false,
+  crossOriginResourcePolicy: true,
 }));
 app.use(routes);
 app.use(express.static('public/uploads'));

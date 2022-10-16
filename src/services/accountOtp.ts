@@ -9,16 +9,11 @@ import Result from "../utils/result";
 const accountOtpRepository: Repository<AccountOtp> = AppDataSource.getRepository(AccountOtp);
 
 export default class AccountOptService {
-    static async getAccountOtp(accountId: number, type: OtpEnum, otp: string) {
+    static async getAccountOtp(email: string, type: OtpEnum, otp: string) {
         //Get user otp from the database
         let accountOtp: AccountOtp | null = await accountOtpRepository.findOne({
-            relations: {
-                account: true,
-            },
             where: {
-                account: {
-                    id: accountId,
-                },
+                email: email,
                 type: type,
                 otp: otp,
             },
@@ -31,30 +26,25 @@ export default class AccountOptService {
     }
 
     static async postAccountOtp(
-        account: Account,
+        email: string,
         type: OtpEnum,
         otp: string,
         otpExpiration: Date
     ) {
         //Get user otp from the database
         await accountOtpRepository.save({
-            account: account,
+            email: email,
             type: type,
             otp: otp,
             otpExpiration: otpExpiration,
         });
     }
 
-    static async deleteAccountOtp(accountId: number, type: OtpEnum, otp: string) {
+    static async deleteAccountOtp(email: string, type: OtpEnum, otp: string) {
         //Get user otp from the database
         let accountOtp: AccountOtp | null = await accountOtpRepository.findOne({
-            relations: {
-                account: true,
-            },
             where: {
-                account: {
-                    id: accountId,
-                },
+                email: email,
                 type: type,
                 otp: otp,
             },
