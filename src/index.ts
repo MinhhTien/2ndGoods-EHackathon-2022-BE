@@ -13,18 +13,6 @@ import Account from './entities/account';
 import UserSocket from './utils';
 import { AdvancedConsoleLogger } from 'typeorm';
 
-console.log({
-  type: 'mysql',
-  port: Config.DATABASE_PORT,
-  host: Config.DATABASE_HOST,
-  username: Config.DATABASE_USERNAME,
-  password: Config.DATABASE_PASSWORD,
-  database: Config.DATABASE_NAME,
-  entities: [path.resolve(__dirname + '/entities/*{.js,.ts}')],
-  logging: true,
-  logger: new AdvancedConsoleLogger('all'),
-})
-
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
