@@ -93,6 +93,6 @@ export default class Account {
     @OneToMany(() => Message, message => message.id)
     message: Message[];
 
-    @OneToOne(() => Cart, cart => cart.id)
+    @OneToOne(() => Cart, cart => cart.account)
     cart: Cart;
 }

@@ -5,9 +5,11 @@ import { GenderEnum, StatusEnum } from "../utils/app.enum";
 import { StatusCodes } from 'http-status-codes';
 import Result from '../utils/result';
 import { LocalFile } from "../entities/localFile";
-import { isValidDate} from "../utils";
+import { isValidDate } from "../utils";
+import { Cart } from "../entities/cart";
 
 const accountRepository: Repository<Account> = AppDataSource.getRepository(Account);
+const cartRepository: Repository<Cart> = AppDataSource.getRepository(Cart);
 
 export default class AccountService {
   static async getOneById(accountId: number): Promise<Account | null> {
@@ -101,7 +103,10 @@ export default class AccountService {
     account.password = password;
     account.hashPassword();
 
-    await accountRepository.save(account);
+    const accountEntity = await accountRepository.save(account);
+    const cart = new Cart();
+    cart.account = accountEntity;
+    await cartRepository.save(cart);
 
     return new Result(
       StatusCodes.CREATED,

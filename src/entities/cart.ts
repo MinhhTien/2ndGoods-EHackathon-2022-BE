@@ -1,9 +1,11 @@
+import { json } from 'body-parser';
 import {
     Entity,
     OneToOne,
     PrimaryGeneratedColumn,
     OneToMany,
     Column,
+    JoinColumn,
   } from 'typeorm';
 import Account from './account';
 import { Product } from './product';
@@ -13,13 +15,11 @@ import { Product } from './product';
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    quantity: number;
+    @Column({ nullable: true })
+    cart: string;
   
-    @OneToMany(() => Product, product => product.id)
-    product: Product[];
-  
-    @OneToOne(() => Account, account => account.id)
+    @OneToOne(() => Account, account => account.cart)
+    @JoinColumn()
     account: Account;
   }
   

@@ -42,3 +42,41 @@ export const checkJwt = async (req: Request, res: Response, next: NextFunction) 
     //Call the next middleware or controller
     next();
   }
+  export const getAccountByJwt = async (req: Request, res: Response) => {
+    //Get the jwt token from the head
+    let token = <string>req.header('Authorization');
+    if (token == '')
+      res
+        .status(StatusCodes.PERMANENT_REDIRECT)
+        .send({ message: 'Please Login to 2ndGoods' });
+    let jwtPayload;
+    token = token?.replace('Bearer ', '');
+    //Try to validate the token and get data
+    let account: Account | null;
+    try {
+      jwtPayload = <any>jwt.verify(token, config.JWT_SECRET);
+      account = await AccountService.getOneById(jwtPayload.accountId);
+      if (account === null) {
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .send({ message: 'Unauthorized: authentication required!' });
+      } else res.locals.account = account;
+    } catch (error) {
+      //If token is not valid, respond with 401 (unauthorized)
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .send({ message: 'Unauthorized: authentication required!' });
+      return;
+    }
+
+    //The token is valid for 1 hour
+    //We want to send a new token on every request
+    const { accountId, email } = jwtPayload;
+    const newToken = jwt.sign({ accountId, email }, config.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    res.setHeader('Authentication', newToken);
+
+    //Call the next middleware or controller
+    res.send(StatusCodes.OK).send({ data: account });
+  }

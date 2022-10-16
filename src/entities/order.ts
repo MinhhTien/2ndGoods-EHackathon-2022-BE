@@ -1,9 +1,10 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { OrderStatusEnum, StatusEnum } from "../utils/app.enum";
 import Account from "./account";
 import { OrderProduct } from "./orderProduct";
 import { Payment } from "./payment";
 import { Voucher } from "./voucher";
+import { Notification } from "./notification";
 
 @Entity()
 export class Order{
@@ -42,4 +43,6 @@ export class Order{
     @OneToMany(() => OrderProduct, orderProduct => orderProduct.id)
     orderProduct: OrderProduct[];
 
+    @OneToOne(() => Notification, notification => notification.order)
+    notification: Notification;
 }

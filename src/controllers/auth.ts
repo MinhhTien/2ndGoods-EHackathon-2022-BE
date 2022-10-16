@@ -3,7 +3,7 @@ import { ControllerService } from "../utils/decorators";
 import { StatusCodes } from 'http-status-codes';
 import AuthService from "../services/auth";
 import AccountService from '../services/account';
-import { generateOtp } from '../utils';
+import { generateCode } from '../utils';
 import config from '../utils/app.config';
 import SendGmailMiddleware from '../middlewares/sendGmail';
 import { OtpEnum } from '../utils/app.enum';
@@ -78,7 +78,7 @@ export default class AuthController {
           let tokenExpiration: Date = new Date();
           tokenExpiration.setMinutes(10 + tokenExpiration.getMinutes());
     
-          const otp: string = generateOtp(6);
+          const otp: string = generateCode(6);
     
           await AccountOptService.postAccountOtp(account, OtpEnum.FORGET, otp, tokenExpiration);
           let name = account.name;
@@ -133,7 +133,7 @@ export default class AuthController {
           let tokenExpiration: Date = new Date();
           tokenExpiration.setMinutes(10 + tokenExpiration.getMinutes());
     
-          const otp: string = generateOtp(6);
+          const otp: string = generateCode(6);
     
           await AccountOptService.postAccountOtp(account, OtpEnum.VERIFICATION, otp, tokenExpiration);
           let name = account.name;
