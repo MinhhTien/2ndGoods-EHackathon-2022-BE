@@ -33,4 +33,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/2ndGoods:lastest
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/second-goods:lastest
